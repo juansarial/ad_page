@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniTools // Utilidades Web Profesionales Gratuitas</title>
+  <meta name="description" content="Colección de herramientas gratuitas de alto rendimiento: edición de audio, compresión de imágenes, unidor de PDF, utilidades CSS y conversores.">
+
+  <!-- Librerías de Procesamiento Local -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --input-bg: #0f172a;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 24px 15px; min-height: 100vh; }
+
+    .ad-slot {
+      width: 100%; max-width: 760px; min-height: 90px; background: #1e293b;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 0.8rem; border-radius: var(--radius); margin: 15px 0;
+      border: 1px dashed var(--border); text-align: center;
+    }
+
+    .container { 
+      background: var(--card-bg); max-width: 760px; width: 100%; padding: 30px; 
+      border-radius: 16px; border: 1px solid var(--border);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    header { text-align: center; margin-bottom: 24px; }
+    .brand-logo { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.025em; }
+    .brand-logo span { color: var(--primary); }
+
+    .nav-tabs { display: flex; flex-wrap: wrap; background: #0f172a; padding: 5px; border-radius: var(--radius); margin-bottom: 22px; gap: 4px; border: 1px solid var(--border); }
+    .tab-btn { 
+      flex: 1 1 22%; padding: 10px 8px; border: none; background: transparent; 
+      font-weight: 600; font-size: 0.82rem; cursor: pointer; color: var(--text-muted); 
+      border-radius: 6px; transition: all 0.2s; text-align: center;
+    }
+    .tab-btn.active { color: #ffffff; background: var(--primary); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .form-group { margin-bottom: 16px; text-align: left; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 6px; color: #cbd5e1; }
+    
+    .form-control { 
+      width: 100%; padding: 11px 14px; border: 1px solid var(--border); 
+      border-radius: var(--radius); font-size: 0.9rem; outline: none; background: var(--input-bg); color: var(--text);
+    }
+    .form-control:focus { border-color: var(--primary); }
+
+    .row { display: flex; gap: 12px; }
+    .row .form-group { flex: 1; }
+
+    .btn-action { 
+      width: 100%; background-color: var(--primary); color: #fff; border: none; 
+      padding: 12px; font-size: 0.92rem; font-weight: 600; border-radius: var(--radius); cursor: pointer; margin-top: 8px;
+    }
+    .btn-action:hover { background-color: var(--primary-hover); }
+
+    .preview-box { margin-top: 18px; padding: 16px; background: #0f172a; border-radius: var(--radius); border: 1px solid var(--border); text-align: center; }
+    
+    .btn-download { 
+      display: inline-block; background-color: #10b981; color: #fff; text-decoration: none; 
+      padding: 10px 18px; font-weight: 600; font-size: 0.85rem; border-radius: var(--radius); margin-top: 10px;
+    }
+
+    .seo-article { max-width: 760px; width: 100%; margin-top: 30px; font-size: 0.88rem; color: #94a3b8; line-height: 1.6; }
+    .seo-article h2 { color: var(--text); font-size: 1.1rem; margin: 16px 0 6px 0; }
+    
+    footer { margin: 30px 0; font-size: 0.8rem; color: var(--text-muted); text-align: center; }
+  </style>
+</head>
+<body>
+
+  <div class="ad-slot"><span>Espacio para Anuncio (Banner Superior)</span></div>
+
+  <div class="container">
+    <header>
+      <div class="brand-logo">⚡ Omni<span>Tools</span></div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Plataforma universal de utilidades digitales sin registro</p>
+    </header>
+
+    <nav class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab(event, 'tab-img')">Imágenes</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-audio')">Audio Lab</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-pdf')">PDF Editor</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-qr')">Códigos QR</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-text')">Texto / JSON</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-calc')">Finanzas</button>
+    </nav>
+
+    <!-- 1. IMÁGENES -->
+    <div id="tab-img" class="tab-content active">
+      <div class="form-group">
+        <label>Seleccionar Imagen:</label>
+        <input type="file" id="imgInput" class="form-control" accept="image/*">
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <label>Calidad (%):</label>
+          <input type="number" id="imgQuality" class="form-control" value="80" min="10" max="100">
+        </div>
+        <div class="form-group">
+          <label>Formato de Salida:</label>
+          <select id="imgFormat" class="form-control">
+            <option value="webp">WEBP (Web)</option>
+            <option value="jpeg">JPG (Foto)</option>
+            <option value="png">PNG (Transparente)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-action" onclick="procesarImagen()">Comprimir y Convertir</button>
+      <div id="imgResult" class="preview-box" style="display:none;"></div>
+    </div>
+
+    <!-- 2. AUDIO LAB (NUEVO) -->
+    <div id="tab-audio" class="tab-content">
+      <div class="form-group">
+        <label>Seleccionar Archivo de Audio / Video:</label>
+        <input type="file" id="audioInput" class="form-control" accept="audio/*,video/*">
+      </div>
+      <button class="btn-action" onclick="extraerAudio()">Convertir a WAV / Extraer Audio</button>
+      <div id="audioResult" class="preview-box" style="display:none;"></div>
+    </div>
+
+    <!-- 3. UNIR PDF -->
+    <div id="tab-pdf" class="tab-content">
+      <div class="form-group">
+        <label>Seleccionar Múltiples Archivos PDF:</label>
+        <input type="file" id="pdfInput" class="form-control" accept="application/pdf" multiple>
+      </div>
+      <button class="btn-action" onclick="unirPDFs()">Combinar PDFs en Uno Solo</button>
+      <div id="pdfResult" class="preview-box" style="display:none;"></div>
+    </div>
+
+    <!-- 4. GENERADOR QR -->
+    <div id="tab-qr" class="tab-content">
+      <div class="form-group">
+        <label>Enlace o Texto para el Código:</label>
+        <input type="text" id="qrInput" class="form-control" placeholder="https://tuenlace.com">
+      </div>
+      <button class="btn-action" onclick="generarQR()">Generar Código QR</button>
+      <div id="qrResult" class="preview-box" style="display:none;">
+        <div id="qrcode" style="display:flex; justify-content:center; padding:10px; background:#fff; border-radius:8px; width:fit-content; margin:0 auto;"></div>
+      </div>
+    </div>
+
+    <!-- 5. TEXTO Y JSON -->
+    <div id="tab-text" class="tab-content">
+      <div class="form-group">
+        <label>Ingresa Texto o Estructura JSON:</label>
+        <textarea id="textContent" class="form-control" rows="4" oninput="contarTexto()"></textarea>
+      </div>
+      <p id="textStats" style="font-size: 0.85rem; color: var(--text-muted);">Caracteres: 0 | Palabras: 0</p>
+      <button class="btn-action" style="margin-top:10px;" onclick="validarJSON()">Formatear / Validar JSON</button>
+      <div id="jsonResult" class="preview-box" style="display:none;"></div>
+    </div>
+
+    <!-- 6. FINANZAS -->
+    <div id="tab-calc" class="tab-content">
+      <div class="row">
+        <div class="form-group"><label>Monto ($):</label><input type="number" id="calcAmount" class="form-control" value="1000"></div>
+        <div class="form-group"><label>Interés Anual (%):</label><input type="number" id="calcRate" class="form-control" value="8"></div>
+        <div class="form-group"><label>Años:</label><input type="number" id="calcYears" class="form-control" value="5"></div>
+      </div>
+      <button class="btn-action" onclick="calcularInversion()">Calcular Retorno Estimado</button>
+      <div id="calcResult" class="preview-box" style="display:none;"></div>
+    </div>
+  </div>
+
+  <div class="ad-slot" style="min-height: 250px;"><span>Espacio para Anuncio (Banner Contenido)</span></div>
+
+  <article class="seo-article">
+    <h2>Herramientas de Procesamiento Local en el Navegador</h2>
+    <p>OmniTools es una suite de utilidades digitales enfocadas en la privacidad del usuario. Todos los datos, audios, imágenes y documentos se procesan localmente utilizando la memoria de tu dispositivo sin enviar información a servidores externos.</p>
+  </article>
+
+  <footer>
+    <p>© 2026 OmniTools. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    function switchTab(evt, tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      evt.currentTarget.classList.add('active');
+    }
+
+    // IMAGEN
+    function procesarImagen() {
+      const input = document.getElementById('imgInput');
+      const quality = parseFloat(document.getElementById('imgQuality').value) / 100;
+      const format = document.getElementById('imgFormat').value;
+      const res = document.getElementById('imgResult');
+      if (!input.files.length) return alert('Selecciona una imagen.');
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width; canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          const url = canvas.toDataURL(`image/${format}`, quality);
+          res.innerHTML = `<img src="${url}" style="max-width:100%; border-radius:8px;"><br><a href="${url}" download="convertido.${format}" class="btn-download">Descargar Archivo</a>`;
+          res.style.display = 'block';
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+
+    // AUDIO EXTRACTOR (AUDIO CONTEXT NATIVO)
+    async function extraerAudio() {
+      const input = document.getElementById('audioInput');
+      const res = document.getElementById('audioResult');
+      if (!input.files.length) return alert('Selecciona un archivo de audio o video.');
+
+      res.innerHTML = `<p style="color:var(--text-muted);">Procesando pista de audio...</p>`;
+      res.style.display = 'block';
+
+      const file = input.files[0];
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const arrayBuffer = await file.arrayBuffer();
+      
+      try {
+        const decodedData = await audioCtx.decodeAudioData(arrayBuffer);
+        const wavBuffer = audioBufferToWav(decodedData);
+        const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+        const url = URL.createObjectURL(blob);
+        res.innerHTML = `<audio controls src="${url}" style="width:100%; margin-bottom:10px;"></audio><br><a href="${url}" download="audio_extraido.wav" class="btn-download">Descargar Audio .WAV</a>`;
+      } catch (e) {
+        res.innerHTML = `<p style="color:#ef4444;">Error al procesar el archivo de audio.</p>`;
+      }
+    }
+
+    // Función auxiliar para convertir AudioBuffer a WAV
+    function audioBufferToWav(buffer) {
+      let numOfChan = buffer.numberOfChannels,
+          length = buffer.length * numOfChan * 2 + 44,
+          out = new DataView(new ArrayBuffer(length)),
+          channels = [], i, sample, offset = 0, pos = 0;
+
+      function setUint16(data) { out.setUint16(pos, data, true); pos += 2; }
+      function setUint32(data) { out.setUint32(pos, data, true); pos += 4; }
+
+      setUint32(0x46464952); setUint32(length - 8); setUint32(0x45564157);
+      setUint32(0x20746d66); setUint32(16); setUint16(1); setUint16(numOfChan);
+      setUint32(buffer.sampleRate); setUint32(buffer.sampleRate * 2 * numOfChan);
+      setUint16(numOfChan * 2); setUint16(16); setUint32(0x61746164); setUint32(length - pos - 4);
+
+      for (i = 0; i < buffer.numberOfChannels; i++) channels.push(buffer.getChannelData(i));
+      while (offset < buffer.length) {
+        for (i = 0; i < numOfChan; i++) {
+          sample = Math.max(-1, Math.min(1, channels[i][offset]));
+          sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767) | 0;
+          out.setInt16(pos, sample, true); pos += 2;
+        }
+        offset++;
+      }
+      return out.buffer;
+    }
+
+    // PDF MERGE
+    async function unirPDFs() {
+      const input = document.getElementById('pdfInput');
+      const res = document.getElementById('pdfResult');
+      if (input.files.length < 2) return alert('Selecciona mínimo 2 archivos PDF.');
+
+      const mergedPdf = await PDFLib.PDFDocument.create();
+      for (let file of input.files) {
+        const bytes = await file.arrayBuffer();
+        const pdf = await PDFLib.PDFDocument.load(bytes);
+        const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+        copiedPages.forEach((page) => mergedPdf.addPage(page));
+      }
+
+      const pdfBytes = await mergedPdf.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      res.innerHTML = `<p style="color:#10b981; font-weight:600;">¡Documentos combinados!</p><a href="${url}" download="pdf_unificado.pdf" class="btn-download">Descargar PDF Unificado</a>`;
+      res.style.display = 'block';
+    }
+
+    // QR
+    function generarQR() {
+      const text = document.getElementById('qrInput').value;
+      const container = document.getElementById('qrcode');
+      if (!text) return alert('Escribe un enlace.');
+      container.innerHTML = '';
+      new QRCode(container, { text: text, width: 140, height: 140 });
+      document.getElementById('qrResult').style.display = 'block';
+    }
+
+    // TEXTO Y JSON
+    function contarTexto() {
+      const val = document.getElementById('textContent').value;
+      const words = val.trim() ? val.trim().split(/\s+/).length : 0;
+      document.getElementById('textStats').textContent = `Caracteres: ${val.length} | Palabras: ${words}`;
+    }
+
+    function validarJSON() {
+      const val = document.getElementById('textContent').value;
+      const res = document.getElementById('jsonResult');
+      try {
+        const parsed = JSON.parse(val);
+        res.innerHTML = `<p style="color:#10b981; font-weight:600;">JSON Válido</p><pre style="text-align:left; font-size:0.75rem; color:#a5f3fc; overflow-x:auto;">${JSON.stringify(parsed, null, 2)}</pre>`;
+      } catch (e) {
+        res.innerHTML = `<p style="color:#ef4444; font-weight:600;">JSON Inválido o Mal Formateado</p>`;
+      }
+      res.style.display = 'block';
+    }
+
+    // CALCULADORA
+    function calcularInversion() {
+      const p = parseFloat(document.getElementById('calcAmount').value);
+      const r = parseFloat(document.getElementById('calcRate').value) / 100;
+      const t = parseFloat(document.getElementById('calcYears').value);
+      const total = p * Math.pow((1 + r), t);
+      const res = document.getElementById('calcResult');
+      res.innerHTML = `<p style="font-size:0.9rem;">Total Estimado:</p><h3 style="font-size:1.3rem; color:#10b981;">$${total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</h3>`;
+      res.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
