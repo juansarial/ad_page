@@ -27,13 +27,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 24px 15px; min-height: 100vh; }
 
-    .ad-slot {
-      width: 100%; max-width: 760px; min-height: 90px; background: #1e293b;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--text-muted); font-size: 0.8rem; border-radius: var(--radius); margin: 15px 0;
-      border: 1px dashed var(--border); text-align: center;
-    }
-
     .container { 
       background: var(--card-bg); max-width: 760px; width: 100%; padding: 30px; 
       border-radius: 16px; border: 1px solid var(--border);
@@ -88,8 +81,6 @@
 </head>
 <body>
 
-  <div class="ad-slot"><span>Espacio para Anuncio (Banner Superior)</span></div>
-
   <div class="container">
     <header>
       <div class="brand-logo">⚡ Omni<span>Tools</span></div>
@@ -129,7 +120,7 @@
       <div id="imgResult" class="preview-box" style="display:none;"></div>
     </div>
 
-    <!-- 2. AUDIO LAB (NUEVO) -->
+    <!-- 2. AUDIO LAB -->
     <div id="tab-audio" class="tab-content">
       <div class="form-group">
         <label>Seleccionar Archivo de Audio / Video:</label>
@@ -184,8 +175,6 @@
     </div>
   </div>
 
-  <div class="ad-slot" style="min-height: 250px;"><span>Espacio para Anuncio (Banner Contenido)</span></div>
-
   <article class="seo-article">
     <h2>Herramientas de Procesamiento Local en el Navegador</h2>
     <p>OmniTools es una suite de utilidades digitales enfocadas en la privacidad del usuario. Todos los datos, audios, imágenes y documentos se procesan localmente utilizando la memoria de tu dispositivo sin enviar información a servidores externos.</p>
@@ -228,7 +217,7 @@
       reader.readAsDataURL(input.files[0]);
     }
 
-    // AUDIO EXTRACTOR (AUDIO CONTEXT NATIVO)
+    // AUDIO EXTRACTOR
     async function extraerAudio() {
       const input = document.getElementById('audioInput');
       const res = document.getElementById('audioResult');
@@ -252,7 +241,6 @@
       }
     }
 
-    // Función auxiliar para convertir AudioBuffer a WAV
     function audioBufferToWav(buffer) {
       let numOfChan = buffer.numberOfChannels,
           length = buffer.length * numOfChan * 2 + 44,
@@ -340,5 +328,10 @@
       res.style.display = 'block';
     }
   </script>
+
+  <!-- Anuncio In-Page Push de Monetag -->
+  <script>(function(s){s.dataset.zone='11613985',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
 </body>
 </html>
+
