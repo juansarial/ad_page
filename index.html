@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
-<script src="https://quge5.com/88/tag.min.js" data-zone="271589" async data-cfasync="false"></script>
-    <script src="https://quge5.com/88/tag.min.js" data-zone="271590" async data-cfasync="false"></script>
- <script src="https://quge5.com/88/tag.min.js" data-zone="271590" async data-cfasync="false"></script>
- <script src="https://5gvci.com/act/files/tag.min.js?z=11614049" data-cfasync="false" async></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OmniTools // Utilidades Web Profesionales Gratuitas</title>
+  <title>Utiliplex // Utilidades Web Profesionales Gratuitas</title>
   <meta name="description" content="Colección de herramientas gratuitas de alto rendimiento: edición de audio, compresión de imágenes, unidor de PDF, utilidades CSS y conversores.">
+
+  <!-- Scripts de Monetización en <head> -->
+  <script src="https://quge5.com/88/tag.min.js" data-zone="271589" async data-cfasync="false"></script>
+  <script src="https://quge5.com/88/tag.min.js" data-zone="271590" async data-cfasync="false"></script>
 
   <!-- Librerías de Procesamiento Local -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -75,20 +74,84 @@
     
     .btn-download { 
       display: inline-block; background-color: #10b981; color: #fff; text-decoration: none; 
-      padding: 10px 18px; font-weight: 600; font-size: 0.85rem; border-radius: var(--radius); margin-top: 10px;
+      padding: 10px 18px; font-weight: 600; font-size: 0.85rem; border-radius: var(--radius); margin-top: 10px; cursor: pointer;
     }
 
     .seo-article { max-width: 760px; width: 100%; margin-top: 30px; font-size: 0.88rem; color: #94a3b8; line-height: 1.6; }
     .seo-article h2 { color: var(--text); font-size: 1.1rem; margin: 16px 0 6px 0; }
     
     footer { margin: 30px 0; font-size: 0.8rem; color: var(--text-muted); text-align: center; }
+
+    /* ESTILOS DEL MODAL PUBLICITARIO INTERNO */
+    .ad-modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(5px);
+      display: none; justify-content: center; align-items: center; z-index: 9999;
+    }
+    .ad-modal-card {
+      background: #1e293b; border: 1px solid #334155; padding: 28px; border-radius: 16px;
+      max-width: 440px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    }
+    .spinner {
+      width: 36px; height: 36px; border: 4px solid #334155; border-top-color: #3b82f6;
+      border-radius: 50%; animation: spin 0.8s linear infinite; margin: 12px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .featured-ad-box {
+      margin-top: 18px;
+      padding: 16px;
+      background: #0f172a;
+      border-radius: 12px;
+      border: 1px solid #3b82f6;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn-main-ad {
+      width: 100%;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      border: none;
+      padding: 14px 18px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+    .btn-main-ad:hover {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      transform: translateY(-1px);
+    }
   </style>
 </head>
 <body>
 
+  <!-- MODAL PUBLICITARIO INTERNO -->
+  <div id="adModal" class="ad-modal-overlay">
+    <div class="ad-modal-card">
+      <h3 style="font-size:1.15rem; color:#fff;">Procesando solicitud...</h3>
+      <div class="spinner"></div>
+      <p style="font-size:0.85rem; color:#94a3b8; margin-top:8px;">
+        Generando resultado. Tiempo estimado: <b id="countdown" style="color:#3b82f6;">3</b>s
+      </p>
+      
+      <!-- Bloque Recomendado Principal -->
+      <div class="featured-ad-box">
+        <p style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:#60a5fa; font-weight:700; margin-bottom:8px;">
+          ⭐ Recomendación Destacada
+        </p>
+        <button id="adDirectBtn" class="btn-main-ad" onclick="abrirAnuncioPrincipal()">
+          🚀 Ir al sitio recomendado
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <header>
-      <div class="brand-logo">⚡ Omni<span>Tools</span></div>
+      <div class="brand-logo">⚡ Utili<span>plex</span></div>
       <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Plataforma universal de utilidades digitales sin registro</p>
     </header>
 
@@ -121,7 +184,7 @@
           </select>
         </div>
       </div>
-      <button class="btn-action" onclick="procesarImagen()">Comprimir y Convertir</button>
+      <button class="btn-action" onclick="ejecutarConAnuncio(procesarImagen)">Comprimir y Convertir</button>
       <div id="imgResult" class="preview-box" style="display:none;"></div>
     </div>
 
@@ -131,7 +194,7 @@
         <label>Seleccionar Archivo de Audio / Video:</label>
         <input type="file" id="audioInput" class="form-control" accept="audio/*,video/*">
       </div>
-      <button class="btn-action" onclick="extraerAudio()">Convertir a WAV / Extraer Audio</button>
+      <button class="btn-action" onclick="ejecutarConAnuncio(extraerAudio)">Convertir a WAV / Extraer Audio</button>
       <div id="audioResult" class="preview-box" style="display:none;"></div>
     </div>
 
@@ -141,7 +204,7 @@
         <label>Seleccionar Múltiples Archivos PDF:</label>
         <input type="file" id="pdfInput" class="form-control" accept="application/pdf" multiple>
       </div>
-      <button class="btn-action" onclick="unirPDFs()">Combinar PDFs en Uno Solo</button>
+      <button class="btn-action" onclick="ejecutarConAnuncio(unirPDFs)">Combinar PDFs en Uno Solo</button>
       <div id="pdfResult" class="preview-box" style="display:none;"></div>
     </div>
 
@@ -151,7 +214,7 @@
         <label>Enlace o Texto para el Código:</label>
         <input type="text" id="qrInput" class="form-control" placeholder="https://tuenlace.com">
       </div>
-      <button class="btn-action" onclick="generarQR()">Generar Código QR</button>
+      <button class="btn-action" onclick="ejecutarConAnuncio(generarQR)">Generar Código QR</button>
       <div id="qrResult" class="preview-box" style="display:none;">
         <div id="qrcode" style="display:flex; justify-content:center; padding:10px; background:#fff; border-radius:8px; width:fit-content; margin:0 auto;"></div>
       </div>
@@ -164,7 +227,7 @@
         <textarea id="textContent" class="form-control" rows="4" oninput="contarTexto()"></textarea>
       </div>
       <p id="textStats" style="font-size: 0.85rem; color: var(--text-muted);">Caracteres: 0 | Palabras: 0</p>
-      <button class="btn-action" style="margin-top:10px;" onclick="validarJSON()">Formatear / Validar JSON</button>
+      <button class="btn-action" style="margin-top:10px;" onclick="ejecutarConAnuncio(validarJSON)">Formatear / Validar JSON</button>
       <div id="jsonResult" class="preview-box" style="display:none;"></div>
     </div>
 
@@ -175,21 +238,53 @@
         <div class="form-group"><label>Interés Anual (%):</label><input type="number" id="calcRate" class="form-control" value="8"></div>
         <div class="form-group"><label>Años:</label><input type="number" id="calcYears" class="form-control" value="5"></div>
       </div>
-      <button class="btn-action" onclick="calcularInversion()">Calcular Retorno Estimado</button>
+      <button class="btn-action" onclick="ejecutarConAnuncio(calcularInversion)">Calcular Retorno Estimado</button>
       <div id="calcResult" class="preview-box" style="display:none;"></div>
     </div>
   </div>
 
   <article class="seo-article">
     <h2>Herramientas de Procesamiento Local en el Navegador</h2>
-    <p>OmniTools es una suite de utilidades digitales enfocadas en la privacidad del usuario. Todos los datos, audios, imágenes y documentos se procesan localmente utilizando la memoria de tu dispositivo sin enviar información a servidores externos.</p>
+    <p>Utiliplex es una suite de utilidades digitales enfocadas en la privacidad del usuario. Todos los datos, audios, imágenes y documentos se procesan localmente utilizando la memoria de tu dispositivo sin enviar información a servidores externos.</p>
   </article>
 
   <footer>
-    <p>© 2026 OmniTools. Todos los derechos reservados.</p>
+    <p>© 2026 Utiliplex. Todos los derechos reservados.</p>
   </footer>
 
   <script>
+    // =========================================================================
+    // PEGA AQUÍ TU URL DE DIRECT LINK O SMARTLINK DE MONETAG / RED PUBLICITARIA
+    // =========================================================================
+    const MAIN_RECOMMENDED_URL = "https://tu-direct-link-aqui.com"; 
+
+    function abrirAnuncioPrincipal() {
+      if (MAIN_RECOMMENDED_URL && MAIN_RECOMMENDED_URL !== "https://tu-direct-link-aqui.com") {
+        window.open(MAIN_RECOMMENDED_URL, '_blank');
+      } else {
+        alert("Configura tu enlace de Direct Link en la variable MAIN_RECOMMENDED_URL.");
+      }
+    }
+
+    function ejecutarConAnuncio(callback) {
+      const modal = document.getElementById('adModal');
+      const countEl = document.getElementById('countdown');
+      let seconds = 3;
+      
+      countEl.textContent = seconds;
+      modal.style.display = 'flex';
+
+      const interval = setInterval(() => {
+        seconds--;
+        countEl.textContent = seconds;
+        if (seconds <= 0) {
+          clearInterval(interval);
+          modal.style.display = 'none';
+          callback();
+        }
+      }, 1000);
+    }
+
     function switchTab(evt, tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -334,10 +429,8 @@
     }
   </script>
 
-  <!-- Script 1: In-Page Push -->
+  <!-- Scripts de Publicidad al final del Body -->
   <script>(function(s){s.dataset.zone='11613985',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-
-  <!-- Script 2: Anti-AdBlock Tag (Nuevo) -->
   <script src="https://5gvci.com/act/files/tag.min.js?z=11614049" data-cfasync="false" async></script>
 
 </body>
